@@ -125,11 +125,12 @@ def lu_fact():
             factor = Ab[j, i]
             Ab[j, :] -= factor * Ab[i, :]  # operation 2 of row operations
             L[j,i] =  factor / Ab[i, i]
+
             
     print(L)
     print()
     print(Ab)
- 
+
 
 def diagDom():
 
@@ -141,7 +142,7 @@ def diagDom():
     # the question just say diagonally dominant, not strictly so...
     for i in range(length):
         diag = A[i][i]
-        others = np.sum(A) - diag
+        others = np.sum(A[i]) - diag
 
         if (diag < others):
             return False

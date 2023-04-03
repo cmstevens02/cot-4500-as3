@@ -67,54 +67,87 @@ def runge_kutta(original_w, start_of_t, end_of_t, num_of_iterations):
 
 
 def gauss():
-    A = np.array([[2,-1,1],
-              [1,3,1],
-              [-1,5,4]] , dtype=np.double)
-    b = np.array([6,0,-3], dtype=np.double)
+    A = np.array([[2, -1, 1],
+                  [1, 3, 1],
+                  [-1, 5, 4]], dtype=np.double)
+    b = np.array([6, 0, -3], dtype=np.double)
     n = len(b)
-    
+
     # Combine A and b into augmented matrix
-    Ab = np.concatenate((A, b.reshape(n,1)), axis=1)
-    
+    Ab = np.concatenate((A, b.reshape(n, 1)), axis=1)
+
     # Perform elimination
     for i in range(n):
 
-        #Divide pivot row by pivot element
-        pivot = Ab[i,i]
+        # Divide pivot row by pivot element
+        pivot = Ab[i, i]
         if (pivot != 0):
-            Ab[i,:] = Ab[i,:] / pivot
-        
+            Ab[i, :] = Ab[i, :] / pivot
+
         # Eliminate entries below pivot
         for j in range(i+1, n):
-            factor = Ab[j,i] 
-            Ab[j,:] -= factor * Ab[i,:] # operation 2 of row operations
-    
+            factor = Ab[j, i]
+            Ab[j, :] -= factor * Ab[i, :]  # operation 2 of row operations
+
     # Perform back-substitution
     for i in range(n-1, -1, -1):
         for j in range(i-1, -1, -1):
-            factor = Ab[j,i]
-            Ab[j,:] -= factor * Ab[i,:]
-    
+            factor = Ab[j, i]
+            Ab[j, :] -= factor * Ab[i, :]
+
     # Extract solution vector x
-    x = Ab[:,n]
-    
+    x = Ab[:, n]
+
     return x
+
+
+def lu_fact():
+    Ab = np.array([[1, 1, 0, 3], [2, 1, -1, 1], [3, -1, -1, 2],
+                 [-1, 2, 3, -1]], dtype=np.double)
+    Adet = np.linalg.det(Ab)
+    print("%.5f" % Adet)
+
+    n = len(Ab)
+
+    # Perform elimination
+    for i in range(n - 1, 0, -1):
+
+        # Divide pivot row by pivot element
+        pivot = Ab[i, i]
+        if (pivot != 0):
+            Ab[i, :] = Ab[i, :] / pivot
+
+        # Eliminate entries below pivot
+        for j in range(n - 2, i, -1):
+            factor = Ab[j, i]
+            Ab[j, :] -= factor * Ab[i, :]  # operation 2 of row operations
+
+    # Perform back-substitution
+    for i in range(n-1, -1, -1):
+        for j in range(i-1, -1, -1):
+            factor = Ab[j, i]
+            Ab[j, :] -= factor * Ab[i, :]
+
+    print(Ab)
+
 
 def diagDom():
 
-    A = np.array([[9, 0, 5, 2, 1], [3, 9, 1, 2, 1], [0, 1, 7, 2, 3], [4, 2, 3, 12, 2], [3, 2, 4, 0, 8]])
+    A = np.array([[9, 0, 5, 2, 1], [3, 9, 1, 2, 1], [
+                 0, 1, 7, 2, 3], [4, 2, 3, 12, 2], [3, 2, 4, 0, 8]])
 
     length = len(A)
 
-    #the question just say diagonally dominant, not strictly so...
+    # the question just say diagonally dominant, not strictly so...
     for i in range(length):
-         diag = A[i][i]
-         others = np.sum(A) - diag
+        diag = A[i][i]
+        others = np.sum(A) - diag
 
-         if (diag < others):
+        if (diag < others):
             return False
-         
+
     return True
+
 
 def posDef():
     A = np.array([[2, 2, 1], [2, 3, 0], [1, 0, 2]])
@@ -124,13 +157,13 @@ def posDef():
     if (np.array_equal(A, At) == False):
         return False
 
-    # check for positive eigen values 
+    # check for positive eigen values
     Aeig = np.linalg.eigvals(A)
 
     for val in Aeig:
         if (val < 0):
             return False
-        
+
     return True
 
 
@@ -140,6 +173,8 @@ if __name__ == "__main__":
     print("%.5f" % runge_kutta(1, 0, 2, 10))
     print()
     print(gauss())
+    print()
+    lu_fact()
     print()
     print(diagDom())
     print()

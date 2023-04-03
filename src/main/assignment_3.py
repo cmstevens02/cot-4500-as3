@@ -104,13 +104,16 @@ def gauss():
 def lu_fact():
     Ab = np.array([[1, 1, 0, 3], [2, 1, -1, 1], [3, -1, -1, 2],
                  [-1, 2, 3, -1]], dtype=np.double)
+    
     Adet = np.linalg.det(Ab)
     print("%.5f" % Adet)
-
+    print()
     n = len(Ab)
 
+    L = np.array([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0],[0, 0, 0, 1]], dtype=np.double)
+
     # Perform elimination
-    for i in range(n - 1, 0, -1):
+    for i in range(n):
 
         # Divide pivot row by pivot element
         pivot = Ab[i, i]
@@ -118,18 +121,15 @@ def lu_fact():
             Ab[i, :] = Ab[i, :] / pivot
 
         # Eliminate entries below pivot
-        for j in range(n - 2, i, -1):
+        for j in range(i+1, n):
             factor = Ab[j, i]
             Ab[j, :] -= factor * Ab[i, :]  # operation 2 of row operations
-
-    # Perform back-substitution
-    for i in range(n-1, -1, -1):
-        for j in range(i-1, -1, -1):
-            factor = Ab[j, i]
-            Ab[j, :] -= factor * Ab[i, :]
-
+            L[j,i] =  factor / Ab[i, i]
+            
+    print(L)
+    print()
     print(Ab)
-
+ 
 
 def diagDom():
 
